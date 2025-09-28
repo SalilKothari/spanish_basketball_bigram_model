@@ -1,0 +1,6 @@
+L1 Regularization (Lasso)
+    λ * Σ |w_i|
+
+
+L2 Regularization (Ridge)
+    λ * Σ (w_i)²

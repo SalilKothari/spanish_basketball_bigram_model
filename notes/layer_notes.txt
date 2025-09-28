@@ -1,0 +1,60 @@
+Common types of layers:
+
+- nn.Linear(in_features, out_features)
+    Fully connected layer: y = xW + b
+    project vectors between dimensions
+    ex. map embeddings (size:128) to vocab logits (say 50,000)
+
+- nn.embedding(num_embeddings, embedding_dim)
+    Token Ids into dense vectors
+    word ID -> [0.1, -0.3, 0.7, ...]
+
+- nn.ReLU()
+    activation function: replaces negatives with 0
+
+
+- nn.softmax(dim)
+    turns logits into probabilities that sum to 1
+    basically scales
+
+- nn.CrossEntropyLoss()
+    combines nn.LogSoftmax + nn.NLLLoss
+    takes raw logits and target indices -> returns scalar loss
+
+    Formula:
+
+        CrossEntropy(x,y) = -log(e^(x_y)/ ∑ e^ (x_j))
+
+        x -> logits, y -> true class index
+
+- nn.NLLLoss
+    Negative Log Likelihood Loss
+    Expects log probabiities
+    Formula:
+                        
+        NLLLoss = - (∑ log(p (y_i | x_i) )) / N
+
+        y_i is the correct label 
+
+- nn.LSTM (Long Short-Term Memory)
+    Type of RNN for long-term dependencies
+    3 gates - inpute, outpug, forget
+    Cell state (long-term memory) and a hidden state (short-term)
+    More powerful, can capture longer dependencies
+    More parametersm slower to train
+    USE LSTM IF LONG-SHORT TERM DEPENDENCIES ARE REALLY IMPORTANT
+
+- nn.GRU (Gated Recurrent Unit)
+    Type of RNN for long-term dependencies
+    2 gates - reset, update
+    Combines cell state + hidden state into one
+    Fewer parameters, faster to train
+    Usually performs almost as well as LSTMs
+    USE GRU FOR SPEED AND DECENT PERFORMANCE
+
+
+- nn.Transformer
+    iplements transformer architecture
+
+- nn.Conv2d
+    Convolutional layer for images

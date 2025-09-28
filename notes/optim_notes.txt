@@ -1,0 +1,89 @@
+
+
+Optimizers are about how you adust weights using gradients. Some are simple (SGD), some adapt lr per weight (Adam, RMSprop), and some are for special architectures or problems
+
+
+- optim.SGD(model.parameters(), lr=0.01, momentum=0.9) (Stochastic Gradient Descent)
+    updates parameters using the gradient of the loss
+    momentum adds a memory of past updates to smooth out oscillations
+    simple and efective for small datasets or linear models
+    Can be slow or unstable for deep networks without tuning
+    Moves step by step along the gradient - can oscillate along steep directions and move slowly on shallow directions
+    Formula:
+
+        θ ← θ − η ⋅ ∇_θ​L
+
+
+- Adam(model.parameters(), lr = 0.001) (Adaptive Movement Estimation)
+    combines momentum + adaptive learning rates per parameter
+    Maintains running averages of 
+        Gradients (first moment)
+        Squared Gradients (second moment)
+    
+    Formula:
+        θ ← θ − η ⋅ (m^hat_t / sqrt(v^hat_t + ϵ))
+
+    Used in most standard tasks: small/medium networks, quick experiments
+
+
+- AdamW(model.parameters(), lr = 0.001, weight_decay = 0.01)
+    variant of Adam that correctly decouples weight decay (L2 regularization) from gradient update
+        Weight Decay is L2 regularization
+        In vanilla Adam, weight decay is added inside the gradient update, which interacts with Adam's adaptive lr -> sometimes makes regularization weaker than intended
+        AdamW separates the weight decay from the gradient step:
+            θ ← θ - η * gradient
+            θ ← θ * (1 - η * weight_decay)
+        This ensures consistent regularization
+    Recommended for transformers and large NLP models
+    Combines RMSprop + momentum, smooth and adaptive updates, usually fast convergence
+    Used in Large-scale models (Transformers); prevents under-regularization
+
+
+- RMSprop(model.parameters(), lr=0.001, alpha = 0.99)
+    Uses moving average of squared gradients to adapt the learning rate
+    Good for Recurrent Networks: RNN, LSTM, GRU
+    Big steps in flat regions, small steps in steep regions
+    Formula:
+    
+        θ ← θ − (​η / sqrt(E[g^2] + ϵ))g
+
+        g is the gradient of t he loss w.r.t parameters at the current step:
+            g = ∇_θ ​* L(θ)
+
+
+- Adagrad(model.parameters(), lr = 0.01)
+    Adapts the lr per parameter base on historical gradients
+    Parameters updated frequently get smaller learning rates
+    Works well for sparse data (NLP or recommender systems)
+
+
+- Adadelta(model.parameters(), lr = 1.0)
+    Improvement over Adagrad (avoids lr decay too fast)
+    Exponentially decaying average o squared gradients instead of sum
+
+
+- NAdam(model.parameters(), lr = 0.001) (Nesterov-acceleraed Adam)
+    Adam + Nesterov momentum
+        Classic Momentum: 
+            vt_​ = γ * v_(t−1) ​ + η * g_t
+            θ_t = θ_(t−1) ​− v_t​
+
+        Nesterov Momentum: Look ahead before applying gradient
+            v_t ​= γ * v_(t−1) ​+ η * ∇_θ * ​L(θ_(t−1)​ − γ * v_(t−1​))
+            θ_t ​= θ_(t−1) ​− v_t
+            
+            anticipates where the gradient will push you, leading to faster convergence and less overshooting​
+
+    Can converge slightly faster in some deep networks
+
+
+
+| Optimizer | Pros                       | Cons                   | Common Use Cases         |
+| --------- | -------------------------- | ---------------------- | ------------------------ |
+| SGD       | Simple, stable             | Needs tuning, slow     | Classic ML, ConvNets     |
+| Adam      | Fast convergence, adaptive | Slightly higher memory | Most deep learning tasks |
+| AdamW     | Correct weight decay       | Similar to Adam        | Transformers, NLP        |
+| RMSprop   | Good for RNNs              | Sensitive to lr        | RNNs/LSTMs/GRUs          |
+| Adagrad   | Sparse updates             | Learning rate decays   | NLP, sparse features     |
+| Adadelta  | Avoids lr decay            | Less popular now       | RNNs, small datasets     |
+| NAdam     | Fast + adaptive            | Rarely used            | Deep networks            |

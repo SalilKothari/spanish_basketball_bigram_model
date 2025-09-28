@@ -1,0 +1,14 @@
+- Logits
+    Raw, unnormalized outputs of a model, before aplpying probability functions like softmax
+
+- Scalar Loss
+    just a single number for loss
+    CrossEntropyLoss gives this 
+
+- θ
+    paramters or weights of a model
+
+- γ
+    Momentum - the momentum factor, (like memory)
+    Reinforcement Learning - discount factor (how much to value future rewards vs immediate rewards)
+    SVM (Support Vector Machines) - hyperparameter that defines the reach of each training example in a feature space
